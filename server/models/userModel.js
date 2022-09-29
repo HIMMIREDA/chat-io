@@ -2,9 +2,10 @@ const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema(
   {
-    name: {
+    username: {
       type: String,
-      required: [true, "Please add an name"],
+      required: [true, "Please add a username"],
+      unique: true,
     },
     email: {
       type: String,
@@ -14,17 +15,21 @@ const userSchema = mongoose.Schema(
     password: {
       type: String,
       required: [true, "Please add a password"],
-
     },
     refreshTokens: {
-        type: [String],
-        default: []
-    }
+      type: [String],
+      default: [],
+    },
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    connected: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-
-module.exports = mongoose.model("User",userSchema);
+module.exports = mongoose.model("User", userSchema);

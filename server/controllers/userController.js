@@ -44,7 +44,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
     username: user.username,
   };
   const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET_KEY, {
-    expiresIn: 15,
+    expiresIn: 30 * 60,
   });
   const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET_KEY, {
     expiresIn: "31d",
@@ -60,6 +60,9 @@ const registerUser = asyncHandler(async (req, res, next) => {
     sameSite: "none",
   });
   return res.status(200).json({
+    id: user.id,
+    email: user.email,
+    username: user.username,
     accessToken,
   });
 });
@@ -109,7 +112,12 @@ const loginUser = asyncHandler(async (req, res) => {
     sameSite: "none",
   });
 
-  return res.status(200).json({ accessToken });
+  return res.status(200).json({
+    id: user.id,
+    email: user.email,
+    username: user.username,
+    accessToken,
+  });
 });
 
 // @desc : logout user
@@ -167,12 +175,12 @@ const refreshToken = asyncHandler(async (req, res) => {
     username: decoded.username,
   };
   const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET_KEY, {
-    expiresIn: 15,
+    expiresIn: 30 * 60,
   });
   const newRefreshToken = jwt.sign(
     payload,
     process.env.JWT_REFRESH_SECRET_KEY,
-    { expiresIn: 90 }
+    { expiresIn: 31 * 24 * 3600 }
   );
   user.refreshTokens = user.refreshTokens.map((token) =>
     token === refreshToken ? newRefreshToken : token
@@ -186,7 +194,12 @@ const refreshToken = asyncHandler(async (req, res) => {
     secure: true,
     sameSite: "none",
   });
-  return res.status(200).json({ accessToken });
+  return res.status(200).json({
+    id: user.id,
+    email: user.email,
+    username: user.username,
+    accessToken,
+  });
 });
 
 // @desc : get current user infos

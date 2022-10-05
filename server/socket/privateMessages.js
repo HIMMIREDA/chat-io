@@ -39,8 +39,8 @@ module.exports = (io, socket) => {
       const user = await User.findById(socket.userId);
       if (!user) return;
 
-      user.friends.foreach((friend) => {
-        socket.to(friend.id).emit("user disconnected", socket.userId);
+      user.friends.forEach((friend) => {
+        socket.to(friend.toString()).emit("user disconnected", socket.userId);
       });
 
       user.connected = false;

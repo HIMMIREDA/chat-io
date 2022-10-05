@@ -30,6 +30,7 @@ const init = (app) => {
   });
 
   io.on("connection", async (socket) => {
+    console.log("A user joined just now");
     // join private chat room
     socket.join(socket.userId);
 
@@ -76,6 +77,7 @@ const init = (app) => {
 
       friends.push({
         id: friend.id,
+        connected: friend.connected,
         username: friend.username,
         lastMessage,
         unseenMessagesCount,
@@ -85,7 +87,7 @@ const init = (app) => {
     // send to the connected user list of friends with last message and count of unseen messages
     socket.emit("friends", friends);
 
-    user.friends.foreach((friend) => {
+    user.friends.forEach((friend) => {
       socket.to(friend.id).emit("user connected", socket.userId);
     });
 

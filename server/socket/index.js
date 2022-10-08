@@ -3,6 +3,7 @@ const User = require("../models/userModel");
 const Message = require("../models/messageModel");
 
 const privateMessagesEvents = require("./privateMessages");
+const mongoose = require("mongoose");
 
 const init = (app) => {
   const httpServer = require("http").createServer(app);
@@ -46,12 +47,13 @@ const init = (app) => {
 
     let friends = [];
     for (const friend of user.friends) {
+      
       const lastMessage = await Message.aggregate([
         {
           $match: {
             $or: [
-              { from: friend.id, to: socket.userId },
-              { from: socket.userId, to: friend.id },
+              { from: mongoose.Types.ObjectId(friend.id), to: mongoose.Types.ObjectId(socket.userId) },
+              { from: mongoose.Types.ObjectId(socket.userId), to: mongoose.Types.ObjectId(friend.id) },
             ],
           },
         },
@@ -63,7 +65,7 @@ const init = (app) => {
         },
       ]);
 
-      console.log(lastMessage);
+      // console.log(lastMessage);
 
       const unseenMessagesCount = await Message.find({
         $and: [
@@ -79,7 +81,7 @@ const init = (app) => {
         id: friend.id,
         connected: friend.connected,
         username: friend.username,
-        lastMessage,
+        lastMessage: lastMessage.at(0),
         unseenMessagesCount,
       });
     }

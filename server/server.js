@@ -5,6 +5,8 @@ const cookieParser = require("cookie-parser");
 const express = require("express");
 const cors = require("cors");
 
+
+
 const app = express();
 const server = require("./socket/index")(app);
 
@@ -16,6 +18,10 @@ app.use(cookieParser());
 
 // user routes
 app.use("/api/users", require("./routes/userRoutes"));
+
+
+// messages routes
+app.use("/api/messages", require("./routes/messageRoutes"));
 
 // error middleware
 app.use(require("./middlewares/errorMiddleware"));

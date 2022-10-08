@@ -2,7 +2,7 @@
 // @TODO LATER
 function SideBar() {
   return (
-    <div>Sidebar</div>
+    <div className="text-white text-3xl">Sidebar</div>
   );
 }
 

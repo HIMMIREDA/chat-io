@@ -5,7 +5,7 @@ const User = require("../models/userModel");
 module.exports = (io, socket) => {
   const saveMessage = async ({ content, to, from }) => {
     try {
-      await Message.create({
+      return await Message.create({
         content,
         to,
         from,
@@ -17,15 +17,28 @@ module.exports = (io, socket) => {
 
   socket.on("private-message", async ({ content, to }) => {
     const user = await User.findById(socket.userId);
-    if (!user || !user.friends.includes(mongoose.Types.ObjectId(to))) return;
+    const friend = await User.findById(to);
+    if (!user || !friend || !user.friends.includes(mongoose.Types.ObjectId(to)))
+      return;
 
-    const message = {
-      content,
-      to,
-      from: socket.userId,
-    };
-    socket.to(to).to(socket.userId).emit("private-message", message);
-    saveMessage(message);
+    const message = saveMessage(message);
+
+    socket
+      .to(to)
+      .to(socket.userId)
+      .emit("private-message", {
+        content: message.content,
+        seen: message.seen,
+        createdAt: message.createdAt,
+        from: {
+          id: user.id,
+          username: user.username,
+        },
+        to: {
+          id: friend.id,
+          username: friend.username,
+        },
+      });
   });
 
   socket.on("disconnect", async () => {

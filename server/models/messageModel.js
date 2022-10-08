@@ -27,6 +27,8 @@ const messageSchema = mongoose.Schema(
   }
 );
 
+messageSchema.index({ createdAt: -1});
+
 function notEmpty(value) {
   return value.trim() !== "";
 }

@@ -28,7 +28,6 @@ function Login() {
     }
     if (isSuccess) {
       dispatch(reset());
-      dispatch({ type: "socket/connect", payload: null });
       navigate("/chat");
     }
     dispatch(reset());

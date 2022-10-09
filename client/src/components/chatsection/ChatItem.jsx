@@ -7,6 +7,7 @@ function ChatItem({ message }) {
   const { friends } = useSelector((state) => state.friends);
   const friend = friends.find((friend) => friend.id === sender?._id);
 
+
   return (
     <li className="flex space-x-8 bg-dark2 items-start p-2">
       <div

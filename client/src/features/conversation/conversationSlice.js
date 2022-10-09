@@ -53,6 +53,9 @@ const conversationSlice = createSlice({
     },
     selectConversation: (state, action) => {
       state.friendId = action.payload;
+    },
+    storeMessage: (state, action) => {
+      state.conversation.unshift(action.payload);
     }
   },
   extraReducers: (builder) => {

@@ -4,29 +4,44 @@ import friendsReducer from "../features/friends/friendsSlice";
 import conversationReducer from "../features/conversation/conversationSlice";
 import { connectSocket } from "../socket/socket";
 
-const createMySocketMiddleware = (store) => (next) => (action) => {
-  let socket;
-  if (action.type === "socket/connect" && !socket) {
-    socket = connectSocket(store.getState().auth.user?.accessToken);
-    socket.on("friends", (friends) => {
-      console.log(friends);
-      next({ type: "friends/getFriends", payload: friends });
-    });
-    socket.on("private-message", (message) => {
-      console.log(message);
-    });
+const createMySocketMiddleware = (store) => {
+  let socket = null;
+  return (next) => (action) => {
+    if (action.type === "socket/connect" && !socket) {
+      const { token } = action.payload;
+      socket = connectSocket(token);
+      socket.on("friends", (friends) => {
+        console.log(friends);
+        console.log("refreshed");
+        store.dispatch({ type: "friends/getFriends", payload: friends });
+      });
+      socket.on("private-message", (message) => {
+        console.log("message received : " + JSON.stringify(message));
+        store.dispatch({ type: "conversation/storeMessage", payload: message });
+      });
 
-    socket.on("user disconnected", (userId) => {
-      console.log(`User with id ${userId} has been disconnected`);
-      next({ type: "friends/updateConnectedStatus", payload: { userId, connected: false } });
-    });
-    socket.on("user connected", (userId) => {
-      console.log(`User with id ${userId} has been connected`);
-      next({ type: "friends/updateConnectedStatus", payload: { userId, connected: true } });
-    });
-  }
+      socket.on("user disconnected", (userId) => {
+        console.log(`User with id ${userId} has been disconnected`);
+        store.dispatch({
+          type: "friends/updateConnectedStatus",
+          payload: { userId, connected: false },
+        });
+      });
+      socket.on("user connected", (userId) => {
+        console.log(`User with id ${userId} has been connected`);
+        store.dispatch({
+          type: "friends/updateConnectedStatus",
+          payload: { userId, connected: true },
+        });
+      });
+    }
+    if (action.type === "socket/sendMessage") {
+      console.log("message sent : " + JSON.stringify(action.payload));
+      socket.emit("private-message", action.payload);
+    }
 
-  return next(action);
+    return next(action);
+  };
 };
 
 export const store = configureStore({

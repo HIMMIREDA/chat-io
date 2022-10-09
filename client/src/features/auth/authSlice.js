@@ -14,6 +14,7 @@ export const registerUser = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const data = await authService.registerUser(user);
+      thunkAPI.dispatch({ type: "socket/connect", payload: {token: data.accessToken} });
       return data;
     } catch (error) {
       const message =
@@ -32,6 +33,7 @@ export const loginUser = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const data = await authService.loginUser(user);
+      thunkAPI.dispatch({ type: "socket/connect", payload: {token: data.accessToken} });
       return data;
     } catch (error) {
       const message =

@@ -21,21 +21,22 @@ module.exports = (io, socket) => {
     if (!user || !friend || !user.friends.includes(mongoose.Types.ObjectId(to)))
       return;
 
-    const message = saveMessage(message);
+    const message = await saveMessage({ content, from: socket.userId, to });
 
-    socket
+    io
       .to(to)
       .to(socket.userId)
       .emit("private-message", {
+        _id: message.id,
         content: message.content,
         seen: message.seen,
         createdAt: message.createdAt,
         from: {
-          id: user.id,
+          _id: user.id,
           username: user.username,
         },
         to: {
-          id: friend.id,
+          _id: friend.id,
           username: friend.username,
         },
       });
@@ -46,8 +47,8 @@ module.exports = (io, socket) => {
 
     // check if user closed all tabs that are connecting to chat room
     const isDisconnected = matchingSockets.size === 0;
-
     if (isDisconnected) {
+      console.log("a user just disconnected");
       // notify friends
       const user = await User.findById(socket.userId);
       if (!user) return;

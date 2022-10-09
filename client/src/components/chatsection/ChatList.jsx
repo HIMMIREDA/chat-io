@@ -32,7 +32,7 @@ function ChatList() {
   return (
     <div className="container mx-auto space-y-8 flex flex-col py-4">
       <ul className="space-y-12">
-        {conversation.map((message) => (
+        {conversation.slice().reverse().map((message) => (
           <ChatItem key={message._id} message={message} />
         ))}
         <div ref={bottomRef} />

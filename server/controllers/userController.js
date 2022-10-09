@@ -177,23 +177,26 @@ const refreshToken = asyncHandler(async (req, res) => {
   const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET_KEY, {
     expiresIn: 30 * 60,
   });
-  const newRefreshToken = jwt.sign(
-    payload,
-    process.env.JWT_REFRESH_SECRET_KEY,
-    { expiresIn: 31 * 24 * 3600 }
-  );
-  user.refreshTokens = user.refreshTokens.map((token) =>
-    token === refreshToken ? newRefreshToken : token
-  );
 
-  await user.save();
+  // @TODO: add regenerate new refresh token and solve race conditions problems
+  // replace old refresh token with new one
+  // const newRefreshToken = jwt.sign(
+  //   payload,
+  //   process.env.JWT_REFRESH_SECRET_KEY,
+  //   { expiresIn: 31 * 24 * 3600 }
+  // );
+  // user.refreshTokens = user.refreshTokens.map((token) =>
+  //   token === refreshToken ? newRefreshToken : token
+  // );
 
-  res.cookie("JWT-REFRESH-TOKEN", newRefreshToken, {
-    httpOnly: true,
-    expires: new Date(Date.now() + 31 * 24 * 3600 * 1000),
-    secure: true,
-    sameSite: "none",
-  });
+  // await user.save();
+  // res.cookie("JWT-REFRESH-TOKEN", newRefreshToken, {
+  //   httpOnly: true,
+  //   expires: new Date(Date.now() + 31 * 24 * 3600 * 1000),
+  //   secure: true,
+  //   sameSite: "none",
+  // });
+
   return res.status(200).json({
     id: user.id,
     email: user.email,

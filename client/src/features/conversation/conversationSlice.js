@@ -4,12 +4,13 @@ import conversationService from "./conversationService";
 
 export const fetchConversation = createAsyncThunk(
   "conversation/fetch",
-  async (friendId, thunkAPI) => {
+  async ({axiosPrivate , friendId}, thunkAPI) => {
     const { accessToken: token } = thunkAPI.getState().auth.user;
     const pageNum = thunkAPI.getState().conversation.nextPage;
     thunkAPI.dispatch(selectConversation(friendId));
     try {
       const data = await conversationService.fetchConversation(
+        axiosPrivate,
         friendId,
         token,
         pageNum

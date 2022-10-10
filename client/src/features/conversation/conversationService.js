@@ -1,8 +1,7 @@
-import { axiosPrivate } from "../../api/axios";
 
 const LIMIT = 10;
 
-const fetchConversation = async (friendId, token, page) => {
+const fetchConversation = async (axiosPrivate ,friendId, token, page) => {
   const response = await axiosPrivate.get(
     `/messages/${friendId}?page=${page}&limit=${LIMIT}`,
     {

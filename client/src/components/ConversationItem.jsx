@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 function ConversationItem({ friend, active, onClickHandler }) {
-  const { username, lastMessage, connected, unseenMessagesCount } = friend;
+  const { id, username, lastMessage, connected, unseenMessagesCount } = friend;
   const item = (
     <>
       <div className={`avatar ${connected ? "online" : "offline"}`}>
@@ -14,12 +14,14 @@ function ConversationItem({ friend, active, onClickHandler }) {
       <div className="flex flex-col flex-1">
         <h2 className="text-xl text-white">{username}</h2>
         <p className="text-xl">
-          {lastMessage.content
-            ? lastMessage.content.substring(0, 20) + "..."
+          {lastMessage?.content
+            ? (lastMessage.from === id ? `${username}: ` : "You: ") +
+              lastMessage.content.substring(0, 20) +
+              "..."
             : "No Messages Yet"}
         </p>
       </div>
-      {unseenMessagesCount && (
+      {Boolean(unseenMessagesCount) && (
         <div className="badge badge-secondary rounded-full">
           {unseenMessagesCount}
         </div>
@@ -28,7 +30,10 @@ function ConversationItem({ friend, active, onClickHandler }) {
   );
 
   const itemForMobile = (
-    <Link to={`/chat/${username}`} className="flex bg-dark1 py-16 h-20 space-x-6 items-center px-2 w-full cursor-pointer hover:bg-base-100 duration-300 xl:hidden">
+    <Link
+      to={`/chat/${username}`}
+      className="flex bg-dark1 py-16 h-20 space-x-6 items-center px-2 w-full cursor-pointer hover:bg-base-100 duration-300 xl:hidden"
+    >
       {item}
     </Link>
   );

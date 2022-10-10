@@ -4,27 +4,34 @@ import conversationService from "./conversationService";
 
 export const fetchConversation = createAsyncThunk(
   "conversation/fetch",
-  async ({axiosPrivate , friendId}, thunkAPI) => {
+  async ({ axiosPrivate, friendId, abortController }, thunkAPI) => {
     const { accessToken: token } = thunkAPI.getState().auth.user;
     const pageNum = thunkAPI.getState().conversation.nextPage;
-    thunkAPI.dispatch(selectConversation(friendId));
+    if (friendId) {
+      thunkAPI.dispatch(selectConversation(friendId));
+    }
     try {
+      console.log(abortController);
       const data = await conversationService.fetchConversation(
         axiosPrivate,
-        friendId,
+        abortController,
+        friendId || thunkAPI.getState().conversation.friendId,
         token,
         pageNum
       );
-      return data;
+      return data || { data: [] };
     } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
+      let message = "";
+      if (error.name !== "CanceledError") {
+        message =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
 
-      return thunkAPI.rejectWithValue(message);
+        }
+        return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -57,29 +64,32 @@ const conversationSlice = createSlice({
     },
     storeMessage: (state, action) => {
       state.conversation.unshift(action.payload);
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
-    .addCase(fetchConversation.pending, (state) => {
-      state.isLoading = true;
-      state.isError = false;
-      state.message = "";
-    })
-    .addCase(fetchConversation.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.message = action.payload;
-    })
-    .addCase(fetchConversation.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isError = false;
-      state.nextPage = action.payload.next.page || state.nextPage;
-      state.conversation.push(...action.payload.data);
-    })
+      .addCase(fetchConversation.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.message = "";
+      })
+      .addCase(fetchConversation.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(fetchConversation.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.nextPage = action.payload?.next?.page || null;
+        state.conversation = [
+          ...new Set([...state.conversation, ...action.payload.data]),
+        ];
+      });
   },
 });
 
-export const { reset, clearConversation, selectConversation} = conversationSlice.actions;
+export const { reset, clearConversation, selectConversation } =
+  conversationSlice.actions;
 
 export default conversationSlice.reducer;

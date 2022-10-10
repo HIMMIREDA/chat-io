@@ -28,6 +28,9 @@ const friendsSlice = createSlice({
           : friend
       );
     },
+    updateLastMessage: (state, action) => {
+      state.friends.lastMessage = action.payload;
+    }
   },
 
   extraReducers: (builder) => {},

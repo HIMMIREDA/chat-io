@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { parseISO, formatDistanceToNow } from "date-fns";
 
-function ChatItem({ message }) {
+function ChatItem({ message, refCallback }) {
   const { user } = useSelector((state) => state.auth);
   const { content, from: sender, createdAt } = message;
   const { friends } = useSelector((state) => state.friends);
@@ -9,7 +9,7 @@ function ChatItem({ message }) {
   
   const timestamp = formatDistanceToNow(parseISO(createdAt));
   return (
-    <li className="flex space-x-8 bg-dark2 items-start p-2">
+    <li className="flex space-x-8 bg-dark2 items-start p-2" ref={refCallback}>
       <div
         className={`avatar ${
           friend && (friend.connected ? "online" : "offline")

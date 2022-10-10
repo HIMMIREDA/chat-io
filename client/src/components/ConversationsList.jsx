@@ -8,12 +8,14 @@ import {
 } from "../features/conversation/conversationSlice";
 import { useState } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { useRef } from "react";
 
 function ConversationsList() {
   const [activeConversationIndx, setActiveConversationIndx] = useState(null);
   const friends = useSelector((state) => state.friends.friends);
   const dispatch = useDispatch();
   const axiosPrivate = useAxiosPrivate();
+  const abortControllerRef = useRef();
 
   if (!friends) {
     return <Spinner fixed={false} />;
@@ -28,10 +30,12 @@ function ConversationsList() {
                 friend={friend}
                 onClickHandler={() => {
                   if (activeConversationIndx !== index) {
+                    abortControllerRef.current?.abort();
+                    abortControllerRef.current = new AbortController();
                     setActiveConversationIndx(index);
                     dispatch(clearConversation());
                     dispatch(
-                      fetchConversation({ axiosPrivate, friendId: friend.id })
+                      fetchConversation({ axiosPrivate, friendId: friend.id, abortController: abortControllerRef.current })
                     );
                   }
                 }}

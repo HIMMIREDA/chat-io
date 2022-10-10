@@ -16,9 +16,12 @@ const PersistLogin = () => {
   useEffect(() => {
     // try getting new access token using refresh token
     let isMounted = true;
+    const abortController = new AbortController();
     const verifyRefresh = async () => {
       try {
-        const response = await axios.get("/refresh");
+        const response = await axios.get("/refresh", {
+          signal: abortController.signal,
+        });
         if (isMounted) {
           dispatch(setUser(response.data));
           dispatch({
@@ -28,16 +31,18 @@ const PersistLogin = () => {
           setIsLoading(false);
         }
       } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-        dispatch(logoutUser());
-        navigate("/login");
+        if (error.name !== "CanceledError") {
+          setIsLoading(false);
+          dispatch(logoutUser());
+          navigate("/login");
+        }
       }
     };
 
     !user?.accessToken ? verifyRefresh() : setIsLoading(false);
     return () => {
       isMounted = false;
+      abortController.abort();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

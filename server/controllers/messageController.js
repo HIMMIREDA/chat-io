@@ -7,7 +7,6 @@ const getMessages = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
 
-  
   const user = await User.findById(req.user.id).populate("friends");
 
   //   check user exists
@@ -29,7 +28,15 @@ const getMessages = asyncHandler(async (req, res) => {
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
 
-  if (endIndex < (await Message.count())) {
+  if (
+    endIndex <
+    (await Message.countDocuments({
+      $or: [
+        { from: friendId, to: req.user.id },
+        { from: req.user.id, to: friendId },
+      ],
+    }))
+  ) {
     results.next = {
       page: page + 1,
       limit,
@@ -55,7 +62,7 @@ const getMessages = asyncHandler(async (req, res) => {
     .limit(limit)
     .populate({ path: "from", select: "_id username" })
     .populate({ path: "to", select: "_id username" });
-    
+
   return res.status(200).json(results);
 });
 

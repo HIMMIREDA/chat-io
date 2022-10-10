@@ -18,6 +18,7 @@ const createMySocketMiddleware = (store) => {
       socket.on("private-message", (message) => {
         console.log("message received : " + JSON.stringify(message));
         store.dispatch({ type: "conversation/storeMessage", payload: message });
+        store.dispatch({ type: "friends/updateLastMessage", payload: message });
       });
 
       socket.on("user disconnected", (userId) => {

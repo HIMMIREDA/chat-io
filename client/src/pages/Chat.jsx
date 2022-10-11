@@ -1,5 +1,6 @@
 import ChatBar from "../components/ChatBar";
 import ChatSection from "../components/chatsection/ChatSection";
+import ParticipantSection from "../components/participantsection/ParticipantSection";
 
 function Chat() {
 
@@ -7,6 +8,7 @@ function Chat() {
     <>
       <ChatBar />
       <ChatSection />
+      <ParticipantSection />
     </>
   );
 }

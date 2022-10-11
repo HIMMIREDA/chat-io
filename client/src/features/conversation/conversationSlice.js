@@ -11,7 +11,6 @@ export const fetchConversation = createAsyncThunk(
       thunkAPI.dispatch(selectConversation(friendId));
     }
     try {
-      console.log(abortController);
       const data = await conversationService.fetchConversation(
         axiosPrivate,
         abortController,

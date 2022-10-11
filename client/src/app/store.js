@@ -17,7 +17,17 @@ const createMySocketMiddleware = (store) => {
       });
       socket.on("private-message", (message) => {
         console.log("message received : " + JSON.stringify(message));
-        store.dispatch({ type: "conversation/storeMessage", payload: message });
+        // add message if receiver is opening the correct conversation
+        if (
+          store.getState().conversation.friendId === message.to._id ||
+          store.getState().conversation.friendId === message.from._id
+        ) {
+          store.dispatch({
+            type: "conversation/storeMessage",
+            payload: message,
+          });
+        }
+        // update the last message on the chatbar
         store.dispatch({ type: "friends/updateLastMessage", payload: message });
       });
 

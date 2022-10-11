@@ -1,8 +1,25 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FaPaperPlane, FaSmile } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import EmojiPicker from "emoji-picker-react";
+
 import { useRef } from "react";
+
+const EmojiPickerComponent = React.memo(
+  React.forwardRef(({ setTextInput }, ref) => {
+    return (
+      <div className="hidden z-10 bottom-16 left-0" ref={ref}>
+        <EmojiPicker
+          lazyLoadEmojis={true}
+          theme="dark"
+          onEmojiClick={(emoji) =>
+            setTextInput((prev) => prev + emoji.emoji.toString())
+          }
+        />
+      </div>
+    );
+  })
+);
 
 function ChatForm() {
   const [textInput, setTextInput] = useState("");
@@ -23,16 +40,11 @@ function ChatForm() {
   return (
     <>
       <form className="sticky bottom-0 z-30 mb-4" onSubmit={handleSubmit}>
-      <div className="hidden z-10 bottom-16 left-0" ref={emojiPickerRef}>
-        <EmojiPicker
-          lazyLoadEmojis={true}
-          theme="dark"
-          onEmojiClick={(emoji) =>
-            setTextInput((prev) => prev + emoji.emoji.toString())
-          }
-        />
-      </div>
         <label className="relative">
+          <EmojiPickerComponent
+            ref={emojiPickerRef}
+            setTextInput={setTextInput}
+          />
           <i
             type="button"
             className="text-white cursor-pointer absolute top-1/2 transform -translate-y-1/2 left-3 hover:text-yellow-400"

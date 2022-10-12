@@ -28,9 +28,8 @@ export const fetchConversation = createAsyncThunk(
             error.response.data.message) ||
           error.message ||
           error.toString();
-
-        }
-        return thunkAPI.rejectWithValue(message);
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );

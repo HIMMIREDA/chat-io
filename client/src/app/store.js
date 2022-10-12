@@ -7,7 +7,7 @@ import { connectSocket } from "../socket/socket";
 const createMySocketMiddleware = (store) => {
   let socket = null;
   return (next) => (action) => {
-    if (action.type === "socket/connect" && !socket) {
+    if (action.type === "socket/connect") {
       const { token } = action.payload;
       socket = connectSocket(token);
       socket.on("friends", (friends) => {

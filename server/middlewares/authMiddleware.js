@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
 
-const protect = async (req, res, next) => {
+const protect = asyncHandler(async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer")) {
     res.status(401);
@@ -32,7 +32,7 @@ const protect = async (req, res, next) => {
     next(error);
     
   }
-};
+});
 
 module.exports = {
   protect,

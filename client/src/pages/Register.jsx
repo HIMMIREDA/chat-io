@@ -42,7 +42,7 @@ function Register() {
   ) : (
     <div className="mx-auto container h-screen flex items-center">
       <form
-        className="w-full  flex flex-col items-center space-y-5 shadow-2xl bg-base-100 p-10"
+        className="w-full  flex flex-col items-center space-y-5 shadow-2xl bg-dark2 p-10"
         onSubmit={handleSubmit}
       >
         <h1 className="text-center text-4xl md:text-3xl text-accent mb-3">

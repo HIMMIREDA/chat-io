@@ -31,8 +31,9 @@ function ConversationItem({ friend, active, onClickHandler }) {
 
   const itemForMobile = (
     <Link
-      to={`/chat/${username}`}
+      to={`/chat/${id}`}
       className="flex bg-dark1 py-16 h-20 space-x-6 items-center px-2 w-full cursor-pointer hover:bg-base-100 duration-300 xl:hidden"
+      onClick={onClickHandler}
     >
       {item}
     </Link>

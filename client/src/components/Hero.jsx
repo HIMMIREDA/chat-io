@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { BiMessage } from "react-icons/bi";
 function Hero() {
   return  (
-    <div className="hero min-h-screen bg-base-200">
+    <div className="hero min-h-screen bg-dark2">
       <div className="hero-content text-center">
         <div className="max-w-md">
         <div className="flex justify-center items-center">

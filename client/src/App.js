@@ -8,20 +8,21 @@ import "react-toastify/dist/ReactToastify.css";
 import PrivateRoute from "./components/PrivateRoute";
 import Chat from "./pages/Chat";
 import PersistLogin from "./components/PersistLogin";
+import ChatMobile from "./pages/ChatMobile";
 
 function App() {
   return (
     <Router>
       <ToastContainer />
-      <main className="flex mx-auto max-h-full flex-col-reverse xl:flex-row">
+      <main className="flex mx-auto max-h-full flex-col-reverse xl:flex-row bg-dark2">
         <Routes>
           <Route path="/" element={<Hero />} />
           <Route element={<PersistLogin />}>
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
-            {/* those will be  protected routes */}
             <Route element={<PrivateRoute />}>
               <Route path="/chat" element={<Chat />} />
+              <Route path="/chat/:id" element={<ChatMobile />} />
             </Route>
           </Route>
 

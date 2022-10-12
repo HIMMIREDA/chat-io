@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
   fetchConversation,
+  clearConversation,
   reset,
 } from "../../features/conversation/conversationSlice";
 import ChatItem from "./ChatItem";
@@ -10,9 +11,8 @@ import MessageLoader from "../MessageLoader";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 function ChatList() {
-  const { isLoading, isError, conversation, message, nextPage } = useSelector(
-    (state) => state.conversation
-  );
+  const { friendId, isLoading, isError, conversation, message, nextPage } =
+    useSelector((state) => state.conversation);
   const dispatch = useDispatch();
 
   const axiosPrivate = useAxiosPrivate();
@@ -41,7 +41,12 @@ function ChatList() {
           const target = entries[0];
           if (target.isIntersecting && nextPage) {
             abortControllerRef.current = new AbortController();
-            dispatch(fetchConversation({ axiosPrivate, abortController: abortControllerRef.current }));
+            dispatch(
+              fetchConversation({
+                axiosPrivate,
+                abortController: abortControllerRef.current,
+              })
+            );
           }
         },
         {
@@ -58,8 +63,20 @@ function ChatList() {
   );
 
   useEffect(() => {
+    if (friendId) {
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = new AbortController();
+      dispatch(clearConversation());
+      dispatch(
+        fetchConversation({
+          axiosPrivate,
+          friendId,
+          abortController: abortControllerRef.current,
+        })
+      );
+    }
     return () => abortControllerRef.current?.abort();
-  }, []);
+  }, [friendId, dispatch, axiosPrivate]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -67,7 +84,6 @@ function ChatList() {
       toast.error(message);
     }
     dispatch(reset());
-
   }, [isError, message, dispatch, isLoading]);
 
   // scroll to bottom when recent messages get added
@@ -76,6 +92,8 @@ function ChatList() {
       behavior: lastPosScroll.current ? "smooth" : "instant",
     });
   }, [recentMessage]);
+
+  
 
   return (
     <div className="container mx-auto space-y-8 flex flex-col py-4">

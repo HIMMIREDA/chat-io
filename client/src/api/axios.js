@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL_AUTH = "api/users";
+const API_URL_AUTH = "/api/users";
 const API_URL_RESOURCE = "/api";
 
 export default axios.create({

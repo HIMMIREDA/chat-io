@@ -10,6 +10,7 @@ import ChatItem from "./ChatItem";
 import MessageLoader from "../MessageLoader";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
+
 function ChatList() {
   const { friendId, isLoading, isError, conversation, message, nextPage } =
     useSelector((state) => state.conversation);
@@ -28,7 +29,7 @@ function ChatList() {
   const lastMessageRef = useCallback(
     (node) => {
       if (isLoading) {
-        if (node) lastPosScroll.current = node;
+        if (node) lastPosScroll.current = node
         return;
       }
 
@@ -93,7 +94,7 @@ function ChatList() {
     });
   }, [recentMessage]);
 
-  
+
 
   return (
     <div className="container mx-auto space-y-8 flex flex-col py-4">

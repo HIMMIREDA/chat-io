@@ -20,7 +20,7 @@ function ChatSectionMobile({ id }) {
     >
       {id ? (
         <>
-          <ChatSectionHeader />
+          <ChatSectionHeader showBackBtn={true}/>
           <ChatList />
           <ChatForm />
         </>

@@ -29,8 +29,20 @@ const friendsSlice = createSlice({
       );
     },
     updateLastMessage: (state, action) => {
-      state.friends.lastMessage = action.payload;
-    }
+      state.friends = state.friends.map((friend) =>
+        action.payload.from.username === friend.username ||
+        action.payload.to.username === friend.username
+          ? {
+              ...friend,
+              lastMessage: {
+                ...action.payload,
+                from: action.payload.from._id,
+                to: action.payload.to._id,
+              },
+            }
+          : friend
+      );
+    },
   },
 
   extraReducers: (builder) => {},

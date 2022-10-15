@@ -1,17 +1,23 @@
 import { useSelector } from "react-redux";
+import { FaArrowAltCircleLeft } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
-function ChatSectionHeader() {
+function ChatSectionHeader({ showBackBtn }) {
   const { friendId } = useSelector((state) => state.conversation);
-  const {friends} = useSelector(state => state.friends);
+  const { friends } = useSelector((state) => state.friends);
   const friend = (friends || []).find((friend) => friend.id === friendId);
 
-  
   return (
     <div className="flex flex-col space-y-2 mt-2 mb-4 bg-dark2 sticky top-0 z-30">
-      <div className="flex space-x-12 sticky top-0">
+      <div className="flex space-x-12 sticky top-0 items-center">
+        {showBackBtn && (
+          <Link to="/chat">
+            <FaArrowAltCircleLeft color="#fff" size={35} className="mt-2" />
+          </Link>
+        )}
         <div className={`avatar ${friend?.connected ? "online" : "offline"}`}>
           <div className="w-14 rounded-full">
-            <img src="https://placeimg.com/192/192/people" alt="avatar"/>
+            <img src="https://placeimg.com/192/192/people" alt="avatar" />
           </div>
         </div>
 
@@ -21,5 +27,9 @@ function ChatSectionHeader() {
     </div>
   );
 }
+
+ChatSectionHeader.defaultProps = {
+  showBackBtn: false,
+};
 
 export default ChatSectionHeader;

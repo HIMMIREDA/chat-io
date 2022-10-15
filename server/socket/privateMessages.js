@@ -11,22 +11,26 @@ module.exports = (io, socket) => {
         from,
       });
     } catch (error) {
-      throw new Error(error.message);
+      return false;
     }
   };
 
   socket.on("private-message", async ({ content, to }) => {
     const user = await User.findById(socket.userId);
     const friend = await User.findById(to);
-    if (!user || !friend || !user.friends.includes(mongoose.Types.ObjectId(to)))
+    if (
+      !user ||
+      !friend ||
+      !user.friends.includes(mongoose.Types.ObjectId(to))
+    ) {
       return;
+    }
 
     const message = await saveMessage({ content, from: socket.userId, to });
 
-    io
-      .to(to)
+    io.to(to)
       .to(socket.userId)
-      .emit("private-message", {
+      .emit("private-message", message ? {
         _id: message.id,
         content: message.content,
         seen: message.seen,
@@ -39,7 +43,7 @@ module.exports = (io, socket) => {
           _id: friend.id,
           username: friend.username,
         },
-      });
+      }: {});
   });
 
   socket.on("disconnect", async () => {

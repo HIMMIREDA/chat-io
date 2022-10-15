@@ -16,8 +16,9 @@ module.exports = (io, socket) => {
   };
 
   socket.on("private-message", async ({ content, to }) => {
-    const user = await User.findById(socket.userId);
-    const friend = await User.findById(to);
+    const user = await User.findOne({_id: socket.userId});
+    const friend = await User.findById({_id: to});
+    console.log("sent")
     if (
       !user ||
       !friend ||
@@ -25,11 +26,11 @@ module.exports = (io, socket) => {
     ) {
       return;
     }
-
+    
     const message = await saveMessage({ content, from: socket.userId, to });
 
-    io.to(to)
-      .to(socket.userId)
+    io.in(to)
+      .in(socket.userId)
       .emit("private-message", message ? {
         _id: message.id,
         content: message.content,

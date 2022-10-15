@@ -19,20 +19,22 @@ const createMySocketMiddleware = (store) => {
       socket.on("private-message", (message) => {
         console.log("message received : " + JSON.stringify(message));
         // add message if receiver is opening the correct conversation
-        if(message){
-
+        if (message) {
           if (
             store.getState().conversation.friendId === message.to._id ||
             store.getState().conversation.friendId === message.from._id
-            ) {
-              store.dispatch({
-                type: "conversation/storeMessage",
-                payload: message,
-              });
-            }
-            // update the last message on the chatbar
-            store.dispatch({ type: "friends/updateLastMessage", payload: message });
+          ) {
+            store.dispatch({
+              type: "conversation/storeMessage",
+              payload: message,
+            });
           }
+          // update the last message on the chatbar
+          store.dispatch({
+            type: "friends/updateLastMessage",
+            payload: message,
+          });
+        }
       });
 
       socket.on("user disconnected", (userId) => {
@@ -43,7 +45,7 @@ const createMySocketMiddleware = (store) => {
         });
       });
       socket.on("user connected", (userId) => {
-        console.log(socket)
+        console.log(socket);
         console.log(`User with id ${userId} has been connected`);
         store.dispatch({
           type: "friends/updateConnectedStatus",
@@ -52,16 +54,16 @@ const createMySocketMiddleware = (store) => {
       });
     }
     if (action.type === "socket/sendMessage") {
-      if(!socket.connected){
+      if (!socket.connected) {
         socket.connect();
       }
       console.log("message sent : " + JSON.stringify(action.payload));
       socket.emit("private-message", action.payload);
     }
 
-    if(action.type === "auth/logout"){
+    if (action.type === "auth/logout") {
       console.log("scoket cleared");
-      socket.disconnect()
+      socket.disconnect();
     }
     return next(action);
   };
@@ -78,4 +80,3 @@ export const store = configureStore({
     createMySocketMiddleware,
   ],
 });
-

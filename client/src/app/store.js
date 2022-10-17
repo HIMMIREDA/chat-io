@@ -54,9 +54,11 @@ const createMySocketMiddleware = (store) => {
       });
     }
     if (action.type === "socket/sendMessage") {
+      console.log(socket.connected)
       if (!socket.connected) {
         socket.connect();
       }
+      console.log(socket.listeners("private-message"));
       console.log("message sent : " + JSON.stringify(action.payload));
       socket.emit("private-message", action.payload);
     }

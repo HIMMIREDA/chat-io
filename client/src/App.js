@@ -9,12 +9,12 @@ import PrivateRoute from "./components/PrivateRoute";
 import Chat from "./pages/Chat";
 import PersistLogin from "./components/PersistLogin";
 import ChatMobile from "./pages/ChatMobile";
-
 function App() {
   return (
     <Router>
       <ToastContainer />
-      <main className="flex mx-auto max-h-full flex-col-reverse xl:flex-row bg-dark2">
+      
+      <main className="flex mx-auto max-h-full bg-dark2">
         <Routes>
           <Route path="/" element={<Hero />} />
           <Route element={<PersistLogin />}>

@@ -18,7 +18,6 @@ module.exports = (io, socket) => {
   socket.on("private-message", async ({ content, to }) => {
     const user = await User.findOne({_id: socket.userId});
     const friend = await User.findById({_id: to});
-    console.log("sent")
     if (
       !user ||
       !friend ||

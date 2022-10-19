@@ -83,6 +83,9 @@ const conversationSlice = createSlice({
         state.conversation = [
           ...new Set([...state.conversation, ...action.payload.data]),
         ];
+      })
+      .addCase("auth/logout/fulfilled", (state) => {
+        return initialState;
       });
   },
 });

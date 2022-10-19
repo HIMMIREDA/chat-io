@@ -11,11 +11,11 @@ function ChatItem({ message, refCallback }) {
   return (
     <li className="flex space-x-8 bg-dark2 items-start p-2" ref={refCallback}>
       <div
-        className={`avatar ${
+        className={`avatar self-center ${
           friend && (friend.connected ? "online" : "offline")
         }`}
       >
-        <div className="w-14 rounded-full">
+        <div className="w-10 sm:w-14 rounded-full">
           <img src="https://placeimg.com/192/192/people" alt="avatar" />
         </div>
       </div>
@@ -25,7 +25,7 @@ function ChatItem({ message, refCallback }) {
           <h2 className="text-2xl text-white ">
             {user.id === sender._id ? "Me" : sender?.username}
           </h2>
-          <span className="text-gray-400 text-sm">{`${timestamp} ago`}</span>
+          <span className="text-gray-400 text-xs sm:text-base">{`${timestamp} ago`}</span>
         </div>
         <p className="text-white text-lg">{content}</p>
       </div>

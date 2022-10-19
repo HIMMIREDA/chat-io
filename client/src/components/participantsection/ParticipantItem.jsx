@@ -27,7 +27,7 @@ function ParticipantItem({ friend }) {
         dispatch(selectConversation(friend.id));
       }}
     >
-      <Link to={`/chat/${friend.id}`} className="xl:hidden border-none">
+      <Link to={`/chat/${friend.id}`} className="xl:hidden border-none flex flex-col items-center space-y-3">
         {item}
       </Link>
 

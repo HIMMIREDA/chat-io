@@ -56,16 +56,19 @@ const createMySocketMiddleware = (store) => {
     if (action.type === "socket/sendMessage") {
       console.log(socket.connected)
       if (!socket.connected) {
-        socket.connect();
+        store.dispatch({
+          type: "socket/connect",
+          payload: {token: store.getState().auth.user.token}
+        })
       }
       console.log(socket.listeners("private-message"));
       console.log("message sent : " + JSON.stringify(action.payload));
       socket.emit("private-message", action.payload);
     }
 
-    if (action.type === "auth/logout") {
+    if (action.type === "auth/logout/pending") {
       console.log("scoket cleared");
-      socket.disconnect();
+      socket?.disconnect();
     }
     return next(action);
   };

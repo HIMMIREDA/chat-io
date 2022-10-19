@@ -1,13 +1,15 @@
 import ConversationItem from "./ConversationItem";
-import Spinner from "./Spinner";
+import Spinner from "../Spinner";
 import { useSelector, useDispatch } from "react-redux";
 import React from "react";
-import { selectConversation } from "../features/conversation/conversationSlice";
+import { selectConversation } from "../../features/conversation/conversationSlice";
 
 function ConversationsList({ conversationsItems }) {
   const { friendId } = useSelector((state) => state.conversation);
   const dispatch = useDispatch();
-
+  const onClickHandler = (friendId) => {
+    dispatch(selectConversation(friendId));
+  }
   if (!conversationsItems) {
     return <Spinner fixed={false} />;
   }
@@ -19,9 +21,7 @@ function ConversationsList({ conversationsItems }) {
             <React.Fragment key={friend.id}>
               <ConversationItem
                 friend={friend}
-                onClickHandler={() => {
-                  dispatch(selectConversation(friend.id));
-                }}
+                onClickHandler={onClickHandler}
                 active={friendId === friend.id ? true : false}
               />
               <span className="h-1 w-full bg-base-100 lg:w-3/4"></span>

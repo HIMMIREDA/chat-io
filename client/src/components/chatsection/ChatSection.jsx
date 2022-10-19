@@ -20,7 +20,7 @@ function ChatSection() {
           <ChatForm />
         </>
       ) : (
-        <h1 className="text-5xl text-white">Let's Chat With Friends 👋</h1>
+        <h1 className="text-5xl text-white text-center">Let's Chat With Friends 👋</h1>
       )}
     </section>
   );

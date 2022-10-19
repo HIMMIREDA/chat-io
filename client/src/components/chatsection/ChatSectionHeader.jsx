@@ -9,14 +9,14 @@ function ChatSectionHeader({ showBackBtn }) {
 
   return (
     <div className="flex flex-col space-y-2 mt-2 mb-4 bg-dark2 sticky top-0 z-30">
-      <div className="flex space-x-12 sticky top-0 items-center">
+      <div className="flex space-x-5 sticky top-0 items-center">
         {showBackBtn && (
           <Link to="/chat">
             <FaArrowAltCircleLeft color="#fff" size={35} className="mt-2" />
           </Link>
         )}
         <div className={`avatar ${friend?.connected ? "online" : "offline"}`}>
-          <div className="w-14 rounded-full">
+          <div className="w-10 sm:w-14 rounded-full">
             <img src="https://placeimg.com/192/192/people" alt="avatar" />
           </div>
         </div>

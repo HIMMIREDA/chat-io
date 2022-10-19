@@ -9,6 +9,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import Chat from "./pages/Chat";
 import PersistLogin from "./components/PersistLogin";
 import ChatMobile from "./pages/ChatMobile";
+import MyFriends from "./pages/MyFriends";
+import NewFriends from "./pages/NewFriends";
 function App() {
   return (
     <Router>
@@ -23,6 +25,8 @@ function App() {
             <Route element={<PrivateRoute />}>
               <Route path="/chat" element={<Chat />} />
               <Route path="/chat/:id" element={<ChatMobile />} />
+              <Route path="/myfriends" element={<MyFriends />} />
+              <Route path="/newfriends" element={<NewFriends />} />
             </Route>
           </Route>
 

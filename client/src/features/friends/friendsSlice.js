@@ -45,7 +45,12 @@ const friendsSlice = createSlice({
     },
   },
 
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    builder
+    .addCase("auth/logout/fulfilled",(state) => {
+      return initialState;
+    })
+  },
 });
 
 export const { reset, getFriends } = friendsSlice.actions;

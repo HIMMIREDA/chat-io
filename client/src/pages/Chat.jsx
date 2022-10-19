@@ -1,4 +1,4 @@
-import ChatBar from "../components/ChatBar";
+import ChatBar from "../components/chatbar/ChatBar";
 import ChatSection from "../components/chatsection/ChatSection";
 import ParticipantSection from "../components/participantsection/ParticipantSection";
 import SideBar from "../components/SideBar";

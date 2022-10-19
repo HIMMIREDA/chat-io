@@ -24,7 +24,7 @@ function Register() {
   };
 
   useEffect(() => {
-    if (isError) {
+    if (isError && message) {
       toast.error(message);
     }
     if (isSuccess) {

@@ -33,19 +33,18 @@ function ConversationItem({ friend, active, onClickHandler }) {
     <Link
       to={`/chat/${id}`}
       className="flex bg-dark1 py-16 h-20 space-x-6 items-center px-2 w-full cursor-pointer hover:bg-base-100 duration-300 xl:hidden"
-      onClick={onClickHandler}
+      onClick={() => onClickHandler(id)}
     >
       {item}
     </Link>
   );
-
   return (
     <>
       <li
-        className={`hidden bg-dark1 py-16 h-20 space-x-6 items-center px-2 w-full cursor-pointer hover:bg-base-100 duration-300 xl:flex ${
-          active && "bg-base-100"
+        className={`hidden py-16 h-20 space-x-6 items-center px-2 w-full cursor-pointer hover:bg-base-100 duration-300 xl:flex ${
+          active ? "bg-base-100" : "bg-dark1"
         }`}
-        onClick={onClickHandler}
+        onClick={() => onClickHandler(id)}
       >
         {item}
       </li>

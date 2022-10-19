@@ -4,15 +4,30 @@ import { MdOutlineDashboard } from "react-icons/md";
 import { TbReportAnalytics, TbDoorExit } from "react-icons/tb";
 import { AiOutlineUser } from "react-icons/ai";
 import { FiMessageSquare } from "react-icons/fi";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../features/auth/authSlice";
 const SideBar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const logoutClickHandler = () => {
+    dispatch(logoutUser());
+    navigate("/login");
+  };
+
   const menus = [
     { name: "Profile", link: "/profile", icon: AiOutlineUser },
     { name: "My Friends", link: "/myfriends", icon: MdOutlineDashboard },
     { name: "Chat", link: "/chat", icon: FiMessageSquare },
     { name: "Requests", link: "/requests", icon: TbReportAnalytics },
-    { name: "Logout", link: "/", icon: TbDoorExit, alignEnd: true },
+    { name: "Get New Friends", link: "/newfriends", icon: TbReportAnalytics },
+    {
+      name: "Logout",
+      icon: TbDoorExit,
+      alignEnd: true,
+      onClickHandler: logoutClickHandler,
+    },
   ];
   const [open, setOpen] = useState(false);
   return (
@@ -21,7 +36,7 @@ const SideBar = () => {
         open ? "w-72" : "w-16"
       } duration-200 text-gray-100 px-4 `}
     >
-      <div className="py-3 flex justify-end">
+      <div className="py-3 flex justify-end ">
         <HiMenuAlt3
           size={26}
           className="cursor-pointer"
@@ -33,9 +48,10 @@ const SideBar = () => {
           <Link
             to={menu?.link}
             key={i}
-            className={` ${
-              menu?.margin && "mt-5"
-            } ${menu?.alignEnd && "mt-auto"} group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md`}
+            className={` ${menu?.margin && "mt-5"} ${
+              menu?.alignEnd && "mt-auto"
+            } group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md`}
+            onClick={menu.onClickHandler}
           >
             <div>{React.createElement(menu?.icon, { size: "20" })}</div>
             <h2

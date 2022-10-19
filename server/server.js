@@ -23,6 +23,10 @@ app.use("/api/users", require("./routes/userRoutes"));
 // messages routes
 app.use("/api/messages", require("./routes/messageRoutes"));
 
+
+// friend requests routes
+app.use("/api/friendrequests", require("./routes/friendRequestRoutes"));
+
 // error middleware
 app.use(require("./middlewares/errorMiddleware"));
 

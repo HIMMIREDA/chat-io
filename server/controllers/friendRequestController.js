@@ -82,7 +82,37 @@ const addRequest = asyncHandler(async (req, res) => {
 // @desc delete a friend request (this action can be done by only by the receiver of friend request)
 // @route DELETE /api/friendrequests/:id
 // @access Private
-const deleteRequest = asyncHandler(async (req, res) => {});
+const deleteRequest = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id);
+  const id = req.params.id || null;
+
+  if (!user) {
+    res.status(401);
+    throw new Error("Unauthorized");
+  }
+
+  if (!id) {
+    res.status(400);
+    throw new Error("Bad request");
+  }
+
+  const friendReq = await Friendrequest.findById(id);
+  if (!friendReq) {
+    res.status(404);
+    throw new Error("Not Found");
+  }
+
+  if (user.id.toString() !== friendReq.to.toString()) {
+    res.status(401);
+    throw new Error("Unauthorized");
+  }
+
+  await Friendrequest.deleteOne({ _id: friendReq.id });
+
+  return res.status(200).json({
+    _id: friendReq.id,
+  });
+});
 
 module.exports = {
   getRequests,

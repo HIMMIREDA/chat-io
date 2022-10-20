@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { HiMenuAlt3 } from "react-icons/hi";
-import { MdOutlineDashboard } from "react-icons/md";
-import { TbReportAnalytics, TbDoorExit } from "react-icons/tb";
-import { AiOutlineUser } from "react-icons/ai";
-import { FiMessageSquare } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../features/auth/authSlice";
+import { FaFacebookMessenger, FaSignOutAlt, FaTelegramPlane, FaUserAlt, FaUserFriends, FaUserPlus, FaUsers } from "react-icons/fa";
+
 const SideBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,14 +15,14 @@ const SideBar = () => {
   };
 
   const menus = [
-    { name: "Profile", link: "/profile", icon: AiOutlineUser },
-    { name: "My Friends", link: "/myfriends", icon: MdOutlineDashboard },
-    { name: "Chat", link: "/chat", icon: FiMessageSquare },
-    { name: "Requests", link: "/requests", icon: TbReportAnalytics },
-    { name: "Get New Friends", link: "/newfriends", icon: TbReportAnalytics },
+    { name: "Profile", link: "/profile", icon: FaUserAlt },
+    { name: "My Friends", link: "/myfriends", icon: FaUsers },
+    { name: "Chat", link: "/chat", icon: FaTelegramPlane },
+    { name: "Requests", link: "/requests", icon: FaUserFriends },
+    { name: "Get New Friends", link: "/newfriends", icon: FaUserPlus },
     {
       name: "Logout",
-      icon: TbDoorExit,
+      icon: FaSignOutAlt,
       alignEnd: true,
       onClickHandler: logoutClickHandler,
     },
@@ -36,6 +34,11 @@ const SideBar = () => {
         open ? "w-72" : "w-16"
       } duration-200 text-gray-100 px-4 `}
     >
+      <Link to="/chat" className="flex justify-center my-4">
+        <span className="bg-green-500 w-10 h-8 flex items-center justify-center rounded-lg cursor-pointer">
+          <FaFacebookMessenger color="white" />
+        </span>
+      </Link>
       <div className="py-3 flex justify-end ">
         <HiMenuAlt3
           size={26}

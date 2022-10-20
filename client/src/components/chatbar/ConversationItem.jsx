@@ -11,6 +11,7 @@ function ConversationItem({ friend, active, onClickHandler }) {
           <img src="https://placeimg.com/192/192/people" alt="avatar" />
         </div>
       </div>
+      
       <div className="flex flex-col flex-1">
         <h2 className="text-xl text-white">{username}</h2>
         <p className="text-xl">

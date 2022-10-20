@@ -9,9 +9,9 @@ router
   .get(protect, friendRequestController.getRequests)
   .post(protect, friendRequestController.addRequest);
 
-// router
-//   .route("/:id")
-//   .delete("/:id", protect, friendRequestController.deleteRequest)
-//   .put("/:id", protect, friendRequestController.acceptRequest);
+router
+  .route("/:id")
+  .delete(protect, friendRequestController.deleteRequest);
+  // .put(protect, friendRequestController.acceptRequest);
 
 module.exports = router;

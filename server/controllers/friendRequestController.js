@@ -60,7 +60,7 @@ const addRequest = asyncHandler(async (req, res) => {
   );
 
   if (isAlreadyFriend) {
-    res
+    return res
       .status(200)
       .json({ message: `user with id : ${friendId} is already your friend` });
   }

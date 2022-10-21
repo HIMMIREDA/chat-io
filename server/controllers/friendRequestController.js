@@ -1,3 +1,5 @@
+// @TODO: optimise db queries
+
 const Friendrequest = require("../models/friendRequestModel");
 const User = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
@@ -50,7 +52,7 @@ const addRequest = asyncHandler(async (req, res) => {
   }
 
   //  check if request exists already
-  if (await Friendrequest.exists({ to: friendId })) {
+  if (await Friendrequest.exists({$or:[{ to: friendId, from: user.id },{to: user.id, from: friendId}]})) {
     return res.status(200).json({ message: "a friend request already exists" });
   }
 
@@ -84,19 +86,19 @@ const addRequest = asyncHandler(async (req, res) => {
 // @access Private
 const deleteRequest = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id);
-  const id = req.params.id || null;
+  const requestId = req.params.id || null;
 
   if (!user) {
     res.status(401);
     throw new Error("Unauthorized");
   }
 
-  if (!id) {
+  if (!requestId) {
     res.status(400);
     throw new Error("Bad request");
   }
 
-  const friendReq = await Friendrequest.findById(id);
+  const friendReq = await Friendrequest.findById(requestId);
   if (!friendReq) {
     res.status(404);
     throw new Error("Not Found");
@@ -110,7 +112,56 @@ const deleteRequest = asyncHandler(async (req, res) => {
   await Friendrequest.deleteOne({ _id: friendReq.id });
 
   return res.status(200).json({
-    _id: friendReq.id,
+    id: requestId,
+  });
+});
+
+// @desc accept an incoming friend request (this action can only be done by the receiver of friend request)
+// @route PUT /apI/friendrequests/:id
+// @access Private
+
+const acceptRequest = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id);
+  const requestId = req.params.id || null;
+
+  if (!user) {
+    res.status(401);
+    throw new Error("Unauthorized");
+  }
+
+  if (!requestId) {
+    res.status(400);
+    throw new Error("Bad request");
+  }
+
+  const friendReq = await Friendrequest.findById(requestId);
+  if (!friendReq) {
+    res.status(404);
+    throw new Error("Not Found");
+  }
+
+  if (user.id.toString() !== friendReq.to.toString()) {
+    res.status(401);
+    throw new Error("Unauthorized");
+  }
+
+  // get the sender of the friend request
+  const friend = await User.findById(friendReq.from);
+  if (!friend) {
+    res.status(404);
+    throw new Error("cant add the sender of friendrequest as a friend");
+  }
+  // accept the sender of friend request as a friend
+  user.friends.push(friendReq.from);
+  friend.friends.push(user.id);
+  await user.save();
+  await friend.save();
+
+  // delete the friend request
+  await Friendrequest.deleteOne({ _id: requestId });
+
+  return res.status(200).json({
+    id: requestId,
   });
 });
 
@@ -118,4 +169,5 @@ module.exports = {
   getRequests,
   addRequest,
   deleteRequest,
+  acceptRequest,
 };

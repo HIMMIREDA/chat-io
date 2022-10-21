@@ -11,7 +11,7 @@ router
 
 router
   .route("/:id")
-  .delete(protect, friendRequestController.deleteRequest);
-  // .put(protect, friendRequestController.acceptRequest);
+  .delete(protect, friendRequestController.deleteRequest)
+  .put(protect, friendRequestController.acceptRequest);
 
 module.exports = router;

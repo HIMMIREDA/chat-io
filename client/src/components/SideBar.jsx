@@ -3,7 +3,15 @@ import { HiMenuAlt3 } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../features/auth/authSlice";
-import { FaFacebookMessenger, FaSignOutAlt, FaTelegramPlane, FaUserAlt, FaUserFriends, FaUserPlus, FaUsers } from "react-icons/fa";
+import {
+  FaFacebookMessenger,
+  FaSignOutAlt,
+  FaTelegramPlane,
+  // FaUserAlt,
+  FaUserFriends,
+  FaUserPlus,
+  FaUsers,
+} from "react-icons/fa";
 
 const SideBar = () => {
   const dispatch = useDispatch();
@@ -15,7 +23,7 @@ const SideBar = () => {
   };
 
   const menus = [
-    { name: "Profile", link: "/profile", icon: FaUserAlt },
+    // { name: "Profile", link: "/profile", icon: FaUserAlt },
     { name: "My Friends", link: "/myfriends", icon: FaUsers },
     { name: "Chat", link: "/chat", icon: FaTelegramPlane },
     { name: "Requests", link: "/requests", icon: FaUserFriends },

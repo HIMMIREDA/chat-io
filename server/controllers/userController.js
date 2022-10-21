@@ -1,5 +1,8 @@
+// @TODO: optimise db queries
+
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
+const Friendrequest = require("../models/friendRequestModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const validator = require("../validators/validate");
@@ -280,6 +283,9 @@ const getFriendsSuggestion = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("User Not Found");
   }
+  const pendingFriendRequests = await Friendrequest.find({
+    $or: [{ from: user.id }, { to: user.id }],
+  });
 
   const results = {};
   const startIndex = (page - 1) * limit;
@@ -289,19 +295,38 @@ const getFriendsSuggestion = asyncHandler(async (req, res) => {
     $and: [
       filter === "" ? {} : { username: new RegExp(`^.*${filter}.*$`, "gi") },
       {
-        _id: { $nin: [...user.friends, user._id] },
+        _id: {
+          $nin: [
+            ...user.friends,
+            user._id,
+            ...pendingFriendRequests.map((pendingReq) =>
+              pendingReq.to.toString() === user.id.toString()
+                ? pendingReq.from
+                : pendingReq.to
+            ),
+          ],
+        },
       },
     ],
   }).count();
-  // .skip(startIndex)
-  // .limit(limit);
+
   results.totalCount = newFriendsSuggestionCounts;
 
   const newFriendsSuggestion = await User.find({
     $and: [
       filter === "" ? {} : { username: new RegExp(`^.*${filter}.*$`, "gi") },
       {
-        _id: { $nin: [...user.friends, user._id] },
+        _id: {
+          $nin: [
+            ...user.friends,
+            user._id,
+            ...pendingFriendRequests.map((pendingReq) =>
+              pendingReq.to.toString() === user.id.toString()
+                ? pendingReq.from
+                : pendingReq.to
+            ),
+          ],
+        },
       },
     ],
   })

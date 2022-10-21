@@ -1,3 +1,5 @@
+// @TODO: optimise db queries
+
 const User = require("../models/userModel");
 const Message = require("../models/messageModel");
 const asyncHandler = require("express-async-handler");

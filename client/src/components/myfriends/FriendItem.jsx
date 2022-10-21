@@ -13,9 +13,9 @@ const FriendItem = ({ friend }) => {
         <h2 className="text-sm sm:text-xl text-white">{username}</h2>
       </div>
       <div className="flex justify-end">
-        <span className="bg-red-500 w-10 h-10 flex items-center justify-center rounded-lg cursor-pointer ">
+        <button className="bg-red-500 w-10 h-10 flex items-center justify-center rounded-lg cursor-pointer ">
           <FaBan color="white" />
-        </span>
+        </button>
       </div>
     </li>
   );

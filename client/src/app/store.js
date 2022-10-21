@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import friendsReducer from "../features/friends/friendsSlice";
 import conversationReducer from "../features/conversation/conversationSlice";
+import friendRequestReducer from "../features/friendrequest/friendRequestSlice";
 import { connectSocket } from "../socket/socket";
 
 const createMySocketMiddleware = (store) => {
@@ -54,12 +55,12 @@ const createMySocketMiddleware = (store) => {
       });
     }
     if (action.type === "socket/sendMessage") {
-      console.log(socket.connected)
+      console.log(socket.connected);
       if (!socket.connected) {
         store.dispatch({
           type: "socket/connect",
-          payload: {token: store.getState().auth.user.token}
-        })
+          payload: { token: store.getState().auth.user.token },
+        });
       }
       console.log(socket.listeners("private-message"));
       console.log("message sent : " + JSON.stringify(action.payload));
@@ -79,6 +80,7 @@ export const store = configureStore({
     auth: authReducer,
     friends: friendsReducer,
     conversation: conversationReducer,
+    friendRequest: friendRequestReducer,
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),

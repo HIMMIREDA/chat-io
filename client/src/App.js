@@ -11,6 +11,7 @@ import PersistLogin from "./components/PersistLogin";
 import ChatMobile from "./pages/ChatMobile";
 import MyFriends from "./pages/MyFriends";
 import NewFriends from "./pages/NewFriends";
+import Requests from "./pages/Requests";
 function App() {
   return (
     <Router>
@@ -27,6 +28,7 @@ function App() {
               <Route path="/chat/:id" element={<ChatMobile />} />
               <Route path="/myfriends" element={<MyFriends />} />
               <Route path="/newfriends" element={<NewFriends />} />
+              <Route path="/requests" element={<Requests />} />
             </Route>
           </Route>
 

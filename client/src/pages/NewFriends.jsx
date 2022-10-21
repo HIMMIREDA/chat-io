@@ -72,7 +72,7 @@ function NewFriends() {
               className="input w-full max-w-xs"
             />
           </form>
-          <NewFriendsList newFriendsArray={currentNewFriendsList} />
+          <NewFriendsList newFriendsArray={currentNewFriendsList} axiosPrivate={axiosPrivate} />
           <ReactPaginate
             nextLabel="next >"
             onPageChange={async (event) => {

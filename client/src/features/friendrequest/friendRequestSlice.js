@@ -43,14 +43,12 @@ export const sendRequest = createAsyncThunk(
       return data;
     } catch (error) {
       let message = "";
-      if (error.name !== "CanceledError") {
-        message =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-      }
+      message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -70,14 +68,12 @@ export const deleteRequest = createAsyncThunk(
       return data;
     } catch (error) {
       let message = "";
-      if (error.name !== "CanceledError") {
-        message =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-      }
+      message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -97,14 +93,12 @@ export const acceptRequest = createAsyncThunk(
       return data;
     } catch (error) {
       let message = "";
-      if (error.name !== "CanceledError") {
-        message =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-      }
+      message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }

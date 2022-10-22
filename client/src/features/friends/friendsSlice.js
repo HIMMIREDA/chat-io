@@ -15,14 +15,12 @@ export const deleteFriend = createAsyncThunk(
       return data;
     } catch (error) {
       let message = "";
-      if (error.name !== "CanceledError") {
-        message =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-      }
+      message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }

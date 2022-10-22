@@ -15,9 +15,13 @@ function ChatSectionHeader({ showBackBtn }) {
             <FaArrowAltCircleLeft color="#fff" size={35} className="mt-2" />
           </Link>
         )}
-        <div className={`avatar ${friend?.connected ? "online" : "offline"}`}>
-          <div className="w-10 sm:w-14 rounded-full">
-            <img src="https://placeimg.com/192/192/people" alt="avatar" />
+        <div
+          className={`avatar placeholder ${
+            friend?.connected ? "online" : "offline"
+          }`}
+        >
+          <div className="bg-neutral-focus text-neutral-content rounded-full w-16">
+            <span className="text-xl">{friend?.username.slice(0, 2)}</span>
           </div>
         </div>
 

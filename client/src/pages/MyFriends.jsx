@@ -27,7 +27,7 @@ function MyFriends() {
       let items = [];
       try {
         const response = await axiosPrivate.get(
-          `/users/friends?page=${page}&limit=${limitPerPage}`,
+          `/friends?page=${page}&limit=${limitPerPage}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -63,7 +63,7 @@ function MyFriends() {
             My Friends
           </h1>
 
-          <FriendList friendsArray={currentFriendsList} />
+          <FriendList friendsArray={currentFriendsList} axiosPrivate={axiosPrivate} />
           <ReactPaginate
             nextLabel="next >"
             onPageChange={async (event) => {

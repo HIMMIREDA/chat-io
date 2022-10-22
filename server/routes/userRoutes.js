@@ -6,7 +6,6 @@ const { protect } = require("../middlewares/authMiddleware");
 
 const userController = require("../controllers/userController");
 
-router.get("/newfriends",protect, userController.getFriendsSuggestion);
 
 router.post("/", userController.registerUser);
 
@@ -18,7 +17,8 @@ router.get("/refresh", userController.refreshToken);
 
 router.get("/me", protect, userController.getMe);
 
-router.get("/friends",protect, userController.getFriends);
+
+
 
 
 module.exports = router;

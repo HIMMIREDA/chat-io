@@ -11,12 +11,12 @@ function ChatItem({ message, refCallback }) {
   return (
     <li className="flex space-x-8 bg-dark2 items-start p-2" ref={refCallback}>
       <div
-        className={`avatar self-center ${
+        className={`avatar placeholder self-center ${
           friend && (friend.connected ? "online" : "offline")
         }`}
       >
-        <div className="w-10 sm:w-14 rounded-full">
-          <img src="https://placeimg.com/192/192/people" alt="avatar" />
+        <div className="bg-neutral-focus text-neutral-content rounded-full w-16">
+          <span className="text-xl">{sender?.username.slice(0, 2)}</span>
         </div>
       </div>
 

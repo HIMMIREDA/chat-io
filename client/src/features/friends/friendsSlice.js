@@ -1,4 +1,32 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import friendsService from "./friendsService";
+
+export const deleteFriend = createAsyncThunk(
+  "friends/delete",
+  async ({ axiosPrivate, friendId }, thunkAPI) => {
+    const { accessToken: token } = thunkAPI.getState().auth.user;
+
+    try {
+      const data = await friendsService.deleteFriend(
+        axiosPrivate,
+        token,
+        friendId
+      );
+      return data;
+    } catch (error) {
+      let message = "";
+      if (error.name !== "CanceledError") {
+        message =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 const initialState = {
   friends: null,
@@ -47,9 +75,27 @@ const friendsSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-    .addCase("auth/logout/fulfilled",(state) => {
-      return initialState;
-    })
+      .addCase("auth/logout/fulfilled", (state) => {
+        return initialState;
+      })
+      .addCase(deleteFriend.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.isError = false;
+        state.message = "";
+      })
+      .addCase(deleteFriend.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(deleteFriend.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.friends = state.friends.filter(
+          (friend) => friend.id !== action.payload.id
+        );
+      });
   },
 });
 

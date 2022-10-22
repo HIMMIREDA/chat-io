@@ -23,6 +23,8 @@ app.use("/api/users", require("./routes/userRoutes"));
 // messages routes
 app.use("/api/messages", require("./routes/messageRoutes"));
 
+// friends routes
+app.use("/api/friends",require("./routes/friendRoutes"));
 
 // friend requests routes
 app.use("/api/friendrequests", require("./routes/friendRequestRoutes"));

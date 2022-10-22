@@ -39,7 +39,8 @@ const init = (app) => {
     // get user
     const user = await User.findById(socket.userId).populate("friends");
     if (!user) {
-      io.emit("socket-error", { message: "User Not Found" });
+      socket.emit("socket-error", { message: "User Not Found" });
+      socket.disconnect();
     }
 
     // set connected to true

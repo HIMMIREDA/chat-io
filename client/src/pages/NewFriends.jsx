@@ -24,11 +24,11 @@ function NewFriends() {
   } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchNewFriends = async () => {
       let items = [];
       try {
         const response = await axiosPrivate.get(
-          `/users/newfriends?page=${page}&limit=${limitPerPage}&filter=${filterQuery.trim()}`,
+          `/friends/newfriends?page=${page}&limit=${limitPerPage}&filter=${filterQuery.trim()}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -48,7 +48,7 @@ function NewFriends() {
       return items;
     };
 
-    fetchUsers().then((result) => {
+    fetchNewFriends().then((result) => {
       setCurrentNewFriendsList(result && result.data);
       setTotalItemsCount(parseInt(result?.totalCount ?? 0));
     });

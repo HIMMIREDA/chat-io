@@ -7,18 +7,17 @@ function ParticipantItem({ friend }) {
   const item = (
     <>
       <div
-        className={`avatar ${
+        className={`avatar placeholder ${
           friend?.connected === true ? "online" : "offline"
         }`}
       >
-        <div className="w-14 rounded-full">
-          <img src="https://placeimg.com/192/192/people" alt="avatar" />
+        <div className="bg-neutral-focus text-neutral-content rounded-full w-16">
+          <span className="text-xl">{friend?.username.slice(0, 2)}</span>
         </div>
       </div>
       <h3 className="text-sm xl:text-2xl text-white ">{friend?.username}</h3>
     </>
   );
-  
 
   return (
     <li
@@ -27,7 +26,10 @@ function ParticipantItem({ friend }) {
         dispatch(selectConversation(friend.id));
       }}
     >
-      <Link to={`/chat/${friend.id}`} className="xl:hidden border-none flex flex-col items-center space-y-3">
+      <Link
+        to={`/chat/${friend.id}`}
+        className="xl:hidden border-none flex flex-col items-center space-y-3"
+      >
         {item}
       </Link>
 

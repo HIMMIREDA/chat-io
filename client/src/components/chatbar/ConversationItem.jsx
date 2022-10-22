@@ -5,13 +5,12 @@ function ConversationItem({ friend, active, onClickHandler }) {
   const { id, username, lastMessage, connected, unseenMessagesCount } = friend;
   const item = (
     <>
-      <div className={`avatar ${connected ? "online" : "offline"}`}>
-        {/* avatar @TODO : add custom avatar upload and load */}
-        <div className="w-14 rounded-full">
-          <img src="https://placeimg.com/192/192/people" alt="avatar" />
+      <div className={`avatar placeholder ${connected ? "online" : "offline"}`}>
+        <div className="bg-neutral-focus text-neutral-content rounded-full w-16">
+          <span className="text-xl">{username.slice(0, 2)}</span>
         </div>
       </div>
-      
+
       <div className="flex flex-col flex-1">
         <h2 className="text-xl text-white">{username}</h2>
         <p className="text-xl">

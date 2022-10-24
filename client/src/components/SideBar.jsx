@@ -7,7 +7,6 @@ import {
   FaFacebookMessenger,
   FaSignOutAlt,
   FaTelegramPlane,
-  // FaUserAlt,
   FaUserFriends,
   FaUserPlus,
   FaUsers,
@@ -23,7 +22,6 @@ const SideBar = () => {
   };
 
   const menus = [
-    // { name: "Profile", link: "/profile", icon: FaUserAlt },
     { name: "My Friends", link: "/myfriends", icon: FaUsers },
     { name: "Chat", link: "/chat", icon: FaTelegramPlane },
     { name: "Requests", link: "/requests", icon: FaUserFriends },

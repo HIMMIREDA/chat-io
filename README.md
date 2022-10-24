@@ -20,7 +20,7 @@
 
 
 
-## Prequesites
+## Prerequesites
 * Node js
 * MongoDB
 

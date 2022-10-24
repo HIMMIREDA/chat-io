@@ -27,11 +27,6 @@
 ## How to run
 
 ### install the dependencies
-
-```bash
-    cp .env.example .env
-```
-
 ```bash
     npm install
 ```
@@ -40,7 +35,10 @@
     cd client && npm install
 ```
 
-### modify .env file (add your values)
+### copy .env.example and modify .env (add your values)
+```bash
+    cp .env.example .env
+```
 ```
 MONGO_URI = 
 JWT_ACCESS_SECRET_KEY = 
@@ -55,10 +53,10 @@ JWT_REFRESH_SECRET_KEY =
 
 
 ## TODO (next tasks) 
-* [] add profile customization
-* [] improve database queries and implement rate limiting in api
-* [] Add group chat
-* [] Try implement audio and video chatting using Webrtc
+- [ ] add profile customization
+- [ ] improve database queries and implement rate limiting in api
+- [ ] Add group chat
+- [ ] Try implement audio and video chatting using Webrtc
  
 
 

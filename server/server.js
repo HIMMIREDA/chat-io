@@ -5,8 +5,6 @@ const cookieParser = require("cookie-parser");
 const express = require("express");
 const cors = require("cors");
 
-
-
 const app = express();
 const server = require("./socket/index")(app);
 
@@ -19,15 +17,22 @@ app.use(cookieParser());
 // user routes
 app.use("/api/users", require("./routes/userRoutes"));
 
-
 // messages routes
 app.use("/api/messages", require("./routes/messageRoutes"));
 
 // friends routes
-app.use("/api/friends",require("./routes/friendRoutes"));
+app.use("/api/friends", require("./routes/friendRoutes"));
 
 // friend requests routes
 app.use("/api/friendrequests", require("./routes/friendRequestRoutes"));
+
+if (process.env.NODE_ENV === "production") {
+  // Set build folder as static
+  app.use(express.static(path.join(__dirname, "../client/build")));
+  app.get("*", (req, res) =>
+    res.sendFile(__dirname, "../", "client", "build", "index.html")
+  );
+}
 
 // error middleware
 app.use(require("./middlewares/errorMiddleware"));

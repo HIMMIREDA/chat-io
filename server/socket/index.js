@@ -2,12 +2,16 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const Message = require("../models/messageModel");
 
-
 const privateMessagesEvents = require("./privateMessages");
 const mongoose = require("mongoose");
 
 const init = (app) => {
-  const httpServer = require("http").createServer(app);
+  let httpServer;
+  if (process.env.NODE_ENV === "production") {
+    httpServer = require("https").createServer(app);
+  } else {
+    httpServer = require("http").createServer(app);
+  }
   const io = require("socket.io")(httpServer, {
     cors: {
       origin: "http://localhost:3000",
@@ -49,13 +53,18 @@ const init = (app) => {
 
     let friends = [];
     for (const friend of user.friends) {
-      
       const lastMessage = await Message.aggregate([
         {
           $match: {
             $or: [
-              { from: mongoose.Types.ObjectId(friend.id), to: mongoose.Types.ObjectId(socket.userId) },
-              { from: mongoose.Types.ObjectId(socket.userId), to: mongoose.Types.ObjectId(friend.id) },
+              {
+                from: mongoose.Types.ObjectId(friend.id),
+                to: mongoose.Types.ObjectId(socket.userId),
+              },
+              {
+                from: mongoose.Types.ObjectId(socket.userId),
+                to: mongoose.Types.ObjectId(friend.id),
+              },
             ],
           },
         },

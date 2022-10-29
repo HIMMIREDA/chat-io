@@ -88,7 +88,7 @@ const init = (app) => {
         id: friend.id,
         connected: friend.connected,
         username: friend.username,
-        lastMessage: lastMessage?.at(0) || null,
+        lastMessage: lastMessage && lastMessage[0],
         unseenMessagesCount,
       });
     }

@@ -27,12 +27,13 @@ app.use("/api/friends", require("./routes/friendRoutes"));
 // friend requests routes
 app.use("/api/friendrequests", require("./routes/friendRequestRoutes"));
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV === "production") {
   // Set build folder as static
   app.use(express.static(path.join(__dirname, "../client/build")));
   app.get("*", (req, res) => {
-    return res.sendFile(__dirname, "../", "client", "build", "index.html");
-    
+    return res.sendFile("index.html", {
+      root: path.join(__dirname, "../client/build"),
+    });
   });
 }
 

@@ -6,12 +6,8 @@ const privateMessagesEvents = require("./privateMessages");
 const mongoose = require("mongoose");
 
 const init = (app) => {
-  let httpServer;
-  if (process.env.NODE_ENV === "production") {
-    httpServer = require("https").createServer(app);
-  } else {
-    httpServer = require("http").createServer(app);
-  }
+  const httpServer = require("http").createServer(app);
+
   const io = require("socket.io")(httpServer, {
     cors: {
       origin: "http://localhost:3000",

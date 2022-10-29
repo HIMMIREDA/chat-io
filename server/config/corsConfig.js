@@ -8,9 +8,12 @@ if (process.env.NODE_ENV === "development") {
 
 const corsOptions = {
   origin: (origin, callback) => {
-    
+    const allowed =
+      process.env.NODE_ENV === "production"
+        ? allowedOrigins.indexOf(origin) !== -1
+        : allowedOrigins.indexOf(origin) !== -1 || !origin;
     // remove !origin in production
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+    if (allowed) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
@@ -19,6 +22,5 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
-
 
 module.exports = corsOptions;

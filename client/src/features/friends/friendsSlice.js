@@ -26,6 +26,34 @@ export const deleteFriend = createAsyncThunk(
   }
 );
 
+export const fetchFriends = createAsyncThunk(
+  "friends/fetch",
+  async ({ axiosPrivate, abortController }, thunkAPI) => {
+    const { accessToken: token } = thunkAPI.getState().auth.user;
+
+    try {
+      const data = await friendsService.fetchFriends(
+        axiosPrivate,
+        abortController,
+        token
+      );
+
+      return data;
+    } catch (error) {
+      let message = "";
+      if (error.name !== "CanceledError") {
+        message =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const initialState = {
   friends: null,
   isSuccess: false,
@@ -44,8 +72,10 @@ const friendsSlice = createSlice({
       state.isSuccess = false;
       state.message = "";
     },
-    getFriends: (state, action) => {
-      state.friends = action.payload;
+    deleteFriendFromList: (state, action) => {
+      state.friends = state.friends?.filter(
+        (friend) => friend.id !== action.payload.friendId
+      );
     },
     updateConnectedStatus: (state, action) => {
       state.friends = state.friends.map((friend) =>
@@ -73,6 +103,22 @@ const friendsSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      .addCase(fetchFriends.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.isError = false;
+        state.message = "";
+      })
+      .addCase(fetchFriends.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(fetchFriends.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.friends = action.payload || [];
+      })
       .addCase("auth/logout/fulfilled", (state) => {
         return initialState;
       })
@@ -90,7 +136,7 @@ const friendsSlice = createSlice({
       .addCase(deleteFriend.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.friends = state.friends.filter(
+        state.friends = state.friends?.filter(
           (friend) => friend.id !== action.payload.id
         );
       });

@@ -12,7 +12,11 @@ const server = require("./socket/index")(app);
 // middlewares (i Enabled All CORS Requests in production , if you dont want to then replace this line with
 // app.use(cors(require("./config/corsConfig")))
 // and edit allowed origins in corsConfig.js )
-app.use(process.env.NODE_ENV === "production" ? cors() : cors(require("./config/corsConfig")));
+app.use(
+  process.env.NODE_ENV === "production"
+    ? cors()
+    : cors(require("./config/corsConfig"))
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

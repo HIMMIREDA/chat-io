@@ -11,14 +11,7 @@ const createMySocketMiddleware = (store) => {
     if (action.type === "socket/connect") {
       const { token } = action.payload;
       socket = connectSocket(token);
-      socket.once("friends", (friends) => {
-        console.log(friends);
-        console.log("refreshed");
-        store.dispatch({ type: "friends/getFriends", payload: friends });
-      });
-
       socket.on("private-message", (message) => {
-        console.log("message received : " + JSON.stringify(message));
         // add message if receiver is opening the correct conversation
         if (message) {
           if (
@@ -39,36 +32,40 @@ const createMySocketMiddleware = (store) => {
       });
 
       socket.on("user disconnected", (userId) => {
-        console.log(`User with id ${userId} has been disconnected`);
         store.dispatch({
           type: "friends/updateConnectedStatus",
           payload: { userId, connected: false },
         });
       });
       socket.on("user connected", (userId) => {
-        console.log(socket);
-        console.log(`User with id ${userId} has been connected`);
         store.dispatch({
           type: "friends/updateConnectedStatus",
           payload: { userId, connected: true },
         });
       });
+      socket.on("delete-friend", (friendId) => {
+        store.dispatch({
+          type: "friends/deleteFriendFromList",
+          payload: { friendId },
+        });
+      });
     }
     if (action.type === "socket/sendMessage") {
-      console.log(socket.connected);
       if (!socket.connected) {
         store.dispatch({
           type: "socket/connect",
           payload: { token: store.getState().auth.user.token },
         });
       }
-      console.log(socket.listeners("private-message"));
-      console.log("message sent : " + JSON.stringify(action.payload));
       socket.emit("private-message", action.payload);
     }
 
+    if (action.type === "friends/delete/fulfilled") {
+      console.log("first");
+      socket.emit("delete-friend", { friendId: action.payload.id });
+    }
+
     if (action.type === "auth/logout/pending") {
-      console.log("scoket cleared");
       socket?.disconnect();
     }
     return next(action);

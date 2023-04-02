@@ -16,8 +16,8 @@ module.exports = (io, socket) => {
   };
 
   socket.on("private-message", async ({ content, to }) => {
-    const user = await User.findOne({_id: socket.userId});
-    const friend = await User.findById({_id: to});
+    const user = await User.findOne({ _id: socket.userId });
+    const friend = await User.findById({ _id: to });
     if (
       !user ||
       !friend ||
@@ -25,26 +25,45 @@ module.exports = (io, socket) => {
     ) {
       return;
     }
-    
+
     const message = await saveMessage({ content, from: socket.userId, to });
 
     io.in(to)
       .in(socket.userId)
-      .emit("private-message", message ? {
-        _id: message.id,
-        content: message.content,
-        seen: message.seen,
-        createdAt: message.createdAt,
-        from: {
-          _id: user.id,
-          username: user.username,
-        },
-        to: {
-          _id: friend.id,
-          username: friend.username,
-        },
-      }: {});
+      .emit(
+        "private-message",
+        message
+          ? {
+              _id: message.id,
+              content: message.content,
+              seen: message.seen,
+              createdAt: message.createdAt,
+              from: {
+                _id: user.id,
+                username: user.username,
+              },
+              to: {
+                _id: friend.id,
+                username: friend.username,
+              },
+            }
+          : {}
+      );
   });
+
+  socket.on("delete-friend", async ({ friendId }) => {
+    const user = await User.findOne({ _id: socket.userId });
+    const friend = await User.findById({ _id: friendId });
+    if (!user || !friend) {
+      return;
+    }
+
+    io.in(friendId).emit("delete-friend",socket.userId);
+  });
+
+  // socket.on("add-friend", async ({ friendId }) => {
+  //   const friend = await User.findById({ _id: friendId });
+  // });
 
   socket.on("disconnect", async () => {
     const matchingSockets = await io.in(socket.userId).allSockets();

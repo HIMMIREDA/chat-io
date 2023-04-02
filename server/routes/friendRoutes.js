@@ -5,8 +5,8 @@ const friendController = require("../controllers/friendController");
 const { protect } = require("../middlewares/authMiddleware");
 
 router.get("/", protect, friendController.getFriends);
+router.get("/details", protect, friendController.getFriendsDetails);
 router.get("/newfriends", protect, friendController.getFriendsSuggestion);
 router.delete("/:id", protect, friendController.deleteFriend);
-
 
 module.exports = router;

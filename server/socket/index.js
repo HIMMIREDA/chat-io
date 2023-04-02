@@ -1,9 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
-const Message = require("../models/messageModel");
-
 const privateMessagesEvents = require("./privateMessages");
-const mongoose = require("mongoose");
 
 const init = (app) => {
   const httpServer = require("http").createServer(app);
@@ -32,7 +29,6 @@ const init = (app) => {
   });
 
   io.on("connection", async (socket) => {
-    console.log("A user joined just now");
     // join private chat room
     socket.join(socket.userId);
 
@@ -46,55 +42,6 @@ const init = (app) => {
     // set connected to true
     user.connected = true;
     await user.save();
-
-    let friends = [];
-    for (const friend of user.friends) {
-      const lastMessage = await Message.aggregate([
-        {
-          $match: {
-            $or: [
-              {
-                from: mongoose.Types.ObjectId(friend.id),
-                to: mongoose.Types.ObjectId(socket.userId),
-              },
-              {
-                from: mongoose.Types.ObjectId(socket.userId),
-                to: mongoose.Types.ObjectId(friend.id),
-              },
-            ],
-          },
-        },
-        {
-          $sort: { createdAt: -1 },
-        },
-        {
-          $limit: 1,
-        },
-      ]);
-
-      // console.log(lastMessage);
-
-      const unseenMessagesCount = await Message.find({
-        $and: [
-          {
-            from: friend.id,
-            to: socket.userId,
-          },
-          { seen: false },
-        ],
-      }).count();
-
-      friends.push({
-        id: friend.id,
-        connected: friend.connected,
-        username: friend.username,
-        lastMessage: lastMessage && lastMessage[0],
-        unseenMessagesCount,
-      });
-    }
-
-    // send to the connected user list of friends with last message and count of unseen messages
-    socket.emit("friends", friends);
 
     user.friends.forEach((friend) => {
       socket.to(friend.id).emit("user connected", socket.userId);

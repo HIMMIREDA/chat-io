@@ -2,7 +2,66 @@
 
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
+const Message = require("../models/messageModel");
+const mongoose = require("mongoose");
 const Friendrequest = require("../models/friendRequestModel");
+
+// @desc : get friends details (unseen messages count + last Message + username + status)
+// @route: GET /api/friends/details
+// @access: Private
+
+const getFriendsDetails = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id).populate("friends");
+  if (!user) {
+    res.status(404);
+    throw new Error("User Not Found");
+  }
+
+  let friends = [];
+  for (const friend of user.friends) {
+    const lastMessage = await Message.aggregate([
+      {
+        $match: {
+          $or: [
+            {
+              from: mongoose.Types.ObjectId(friend.id),
+              to: mongoose.Types.ObjectId(user.id),
+            },
+            {
+              from: mongoose.Types.ObjectId(user.id),
+              to: mongoose.Types.ObjectId(friend.id),
+            },
+          ],
+        },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $limit: 1,
+      },
+    ]);
+
+    const unseenMessagesCount = await Message.find({
+      $and: [
+        {
+          from: friend.id,
+          to: user.id,
+        },
+        { seen: false },
+      ],
+    }).count();
+
+    friends.push({
+      id: friend.id,
+      connected: friend.connected,
+      username: friend.username,
+      lastMessage: lastMessage && lastMessage[0],
+      unseenMessagesCount,
+    });
+  }
+  return res.status(200).json(friends);
+});
 
 // @desc : get current user friends
 // @route: GET /api/friends
@@ -171,6 +230,7 @@ const deleteFriend = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
+  getFriendsDetails,
   getFriends,
   getFriendsSuggestion,
   deleteFriend,
